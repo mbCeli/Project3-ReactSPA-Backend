@@ -1,4 +1,4 @@
-//APP configures express server
+//CONFIGURES express server
 
 // ℹ️ Gets access to environment variables/settings
 require("dotenv").config();

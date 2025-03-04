@@ -1,4 +1,4 @@
-//SERVER launches the app equivalent to main.jsx
+//LAUNCHES the app, is equivalent to main.jsx
 
 require("dotenv").config();
 
