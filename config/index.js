@@ -9,11 +9,10 @@ const logger = require("morgan");
 // https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
 
-// ℹ️ Needed to accept requests from 'the outside'. CORS stands for cross origin resource sharing
-// unless the request is made from the same domain, by default express wont accept POST requests
-const cors = require("cors");
+// ℹ️ Handles CORS
+const corsMiddleware = require("../middleware/cors.middleware");
 
-const FRONTEND_URL = process.env.ORIGIN || "http://localhost:3000";
+/* const FRONTEND_URL = process.env.ORIGIN || "http://localhost:3000"; */
 
 // Middleware configuration
 module.exports = (app) => {
@@ -22,11 +21,7 @@ module.exports = (app) => {
   app.set("trust proxy", 1);
 
   // controls a very specific header to pass headers from the frontend
-  app.use(
-    cors({
-      origin: [FRONTEND_URL],
-    })
-  );
+  app.use(corsMiddleware);
 
   // In development environment the app logs
   app.use(logger("dev"));
