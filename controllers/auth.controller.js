@@ -1,11 +1,20 @@
 const User = require("../models/User.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const saltRounds = 10;
 
 //Signup
 const signup = (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password, fullName, username, ageRange } = req.body;
 
   // Check if email, password or name are provided as empty strings
-  if (email === "" || password === "" || name === "") {
+  if (
+    email === "" ||
+    password === "" ||
+    fullName === "" ||
+    username === "" ||
+    ageRange === ""
+  ) {
     return res
       .status(400)
       .json({ message: "Provide email, password and name" });
@@ -25,7 +34,9 @@ const signup = (req, res, next) => {
       // Create new user object with hashed password
       return User.create({
         email,
-        name,
+        fullName,
+        username,
+        ageRange,
         password: hashedPassword,
       });
     })
@@ -50,48 +61,64 @@ const signup = (req, res, next) => {
 
 //Login
 const login = (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
+    console.log("Login attempt for:", email);
 
-  // check if email and password are provided
-  if (email === "" || password === "") {
-    return res.status(400).json({ message: "Provide email and password" });
+    // check if email and password are provided
+    if (email === "" || password === "") {
+      return res.status(400).json({ message: "Provide email and password" });
+    }
+
+    // check if user exists
+    User.findOne({ email })
+      .then((foundUser) => {
+        console.log("User found:", foundUser ? "Yes" : "No");
+
+        if (!foundUser) {
+          // If user is not found, send error response
+          return res.status(401).json({ message: "User not found" });
+        }
+
+        console.log("Comparing passwords...");
+        // Compare the provided password with the one saved in the database
+        const passwordCorrect = bcrypt.compareSync(
+          password,
+          foundUser.password
+        );
+        console.log("Password correct:", passwordCorrect ? "Yes" : "No");
+
+        if (passwordCorrect) {
+          // Create an object that will be set as the token payload
+          console.log("Creating token...");
+          const { _id, email, fullName, username, role } = foundUser;
+          const isAdmin = role === "admin";
+
+          const payload = { _id, email, fullName, username, isAdmin };
+          console.log("Payload created:", payload);
+
+          // Create a JSON Web Token and sign it
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          console.log("Token created successfully");
+
+          // Send the token as the response
+          res.status(200).json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => {
+        console.log("Error in database query:", err);
+        res.status(500).json({ message: "Internal Server Error" });
+      });
+  } catch (error) {
+    console.log("Unexpected error in login function:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-
-  // check if user exists
-  User.findOne({ email })
-    .then((foundUser) => {
-      if (!foundUser) {
-        // If user is not found, send error response
-        return res.status(401).json({ message: "User not found" });
-      }
-
-      // Compare the provided password with the one saved in the database
-      const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
-
-      if (passwordCorrect) {
-        // Create an object that will be set as the token payload
-        const { _id, email, name, isAdmin } = foundUser;
-
-        const payload = { _id, email, name, isAdmin };
-
-        // Create a JSON Web Token and sign it
-        const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-          algorithm: "HS256",
-          expiresIn: "6h",
-        });
-
-        // Send the token as the response
-        res.status(200).json({ authToken });
-      } else {
-        res.status(401).json({ message: "Unable to authenticate the user" });
-      }
-    })
-    .catch((err) => {
-      console.log("Error logging in:", err);
-      res.status(500).json({ message: "Internal Server Error" });
-    });
 };
-
 
 //Logout
 const logout = (req, res) => {
