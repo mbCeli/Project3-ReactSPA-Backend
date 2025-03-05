@@ -1,0 +1,54 @@
+Folder structure
+
+- config
+    - index.js - Connects the app.js with the middlewares
+
+- controllers
+    - whatevermodelname.controller.js - Has the express petitions (CRUD) for the models
+
+- db
+    - index.js - Connects to the database (MongoDB, SQL, etc...)
+
+- error-handling
+    - index.js - Handles the errors of the overall app
+
+- middleware
+    - cors.middleware.js - Handles CORS (Cross-Origin Resource Sharing) to control the origin of the requests
+    - jwt.middleware.js - Handles JWT (json web token) for authentication
+
+- models
+    - whatevermodelname.model.js - Has the schema for the models
+
+- routes
+    - index.routes.js - Connects the controllers with the routes and the jwt.middleware.js
+    - auth.routes.js - Handles the petitions for authentication and authorization (login, signup, verify, logout)
+
+- server.js - Starts the server (launches the app)
+
+- app.js - Connects the routes with the server, configures the express server
+
+Current models relationships
+
+- User to Game (Favorites): One-to-many relationship where users can favorite multiple games.
+    - Implemented via the favourites array in the User model which stores Game IDs
+    - Complemented by a favoriteCount counter in the Game model
+
+- User to PlayAnalytics: One-to-many relationship where a user generates multiple analytics entries.
+    - Each PlayAnalytics entry is linked to both a user and a game
+    - This relationship tracks play history, scores, and game interactions
+
+- Game to PlayAnalytics: One-to-many relationship where each game has multiple analytics entries.
+    - Used for tracking game popularity and engagement metrics
+
+
+- User to Rating: One-to-many relationship where users can rate multiple games.
+    - New Rating model allows users to provide scores and reviews for games
+
+- Game to Rating: One-to-many relationship where games receive multiple ratings.
+    - Aggregate rating data is stored in the Game model for quick access
+
+- Game to Leaderboard: One-to-many relationship where each game has multiple leaderboards.
+    - Different timeframes (daily, weekly, monthly, all-time)
+
+- User to Leaderboard: Many-to-many relationship through leaderboard entries.
+    - Users appear on leaderboards when they achieve high scores

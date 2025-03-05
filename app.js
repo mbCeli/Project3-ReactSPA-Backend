@@ -9,6 +9,8 @@ require("./db/index");
 require("./models/User.model");
 require("./models/Game.model");
 require("./models/PlayAnalytics.model");
+require("./models/Rating.model");
+require("./models/Leaderboard.model");
 
 
 // Handles http requests (express is node js framework)

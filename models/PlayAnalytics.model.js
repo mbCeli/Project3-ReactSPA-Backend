@@ -8,53 +8,72 @@ const analyticsSchema = new Schema(
       ref: "User",
       required: true,
     },
-
     game: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Game",
       required: true,
     },
-
     playDate: {
       type: Date,
       default: Date.now,
       required: true,
     },
-
     score: {
       type: Number,
       default: 0,
     },
-
     playDuration: {
       type: Number, // Duration in seconds
       default: 0,
     },
-
     completed: {
       type: Boolean,
       default: false,
     },
-
     deviceType: {
       type: String,
       enum: ["desktop", "tablet", "mobile"],
       required: true,
     },
-
     userAction: {
       type: String,
       enum: ["play", "favorite", "unfavorite", "view"],
       required: true,
     },
+    // New fields for tracking achievements and levels
+    achievementsEarned: [
+      {
+        achievement: {
+          type: String, // Name of the achievement
+          required: true,
+        },
+        earnedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    level: {
+      type: Number,
+      default: 1,
+    },
+    
+    levelCompleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    timestamps: false,
+    timestamps: true,
   }
 );
 
-analyticsSchema.index({ user: 1, game: 1, playDate: 1 }); // this is for play history, is an index that will be used to find the play history of a user
-analyticsSchema.index({ game: 1, score: -1 }); // for leaderboards in descending order for highest scores for each game
+// indexes for common queries
+analyticsSchema.index({ user: 1, game: 1, playDate: 1 });
+analyticsSchema.index({ game: 1, score: -1 });
+analyticsSchema.index({ user: 1, playDate: -1 }); // For user's play history
+analyticsSchema.index({ game: 1, playDate: -1 }); // For game activity timeline
+analyticsSchema.index({ user: 1, userAction: 1 }); // For tracking user behaviors
 
-const Analytics = mongoose.model("Analytics", analyticsSchema);
-module.exports = Analytics;
+const PlayAnalytics = mongoose.model("PlayAnalytics", analyticsSchema);
+module.exports = PlayAnalytics;

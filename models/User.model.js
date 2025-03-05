@@ -6,9 +6,8 @@ const userSchema = new Schema(
     fullName: {
       type: String,
       required: true,
-      trim: true, //remove spaces at the beginning and at the end
+      trim: true,
     },
-
     username: {
       type: String,
       required: true,
@@ -16,7 +15,6 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-
     email: {
       type: String,
       required: true,
@@ -30,66 +28,65 @@ const userSchema = new Schema(
         message: (props) => `${props.value} is not a valid email address.`,
       },
     },
-
     password: {
       type: String,
       required: [true, "Password is required."],
       validate: {
         validator: function (v) {
-          return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.*[a-z]).{5,}$/.test(v);
+          return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.*[a-z]).{5,}$/.test(
+            v
+          );
         },
         message: (props) =>
           "Password must contain at least one uppercase letter, one number, and one special character!",
       },
     },
-
     role: {
       type: String,
       required: true,
       enum: ["user", "admin"],
       default: "user",
     },
-
     ageRange: {
       type: String,
       required: true,
       enum: ["10-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
     },
-
     favourites: [
       {
-        type: mongoose.Schema.Types.ObjectId, //relationship with the Game model
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Game",
       },
     ],
-
-    playHistory: [
-      {
-        game: {
-          type: mongoose.Schema.Types.ObjectId, //relationship with the Game model
-          ref: "Game",
-        },
-        lastPlayed: {
-          type: Date,
-          default: Date.now,
-        },
-        timesPlayed: {
-          type: Number,
-          default: 1,
-        },
+    // Stats/summary data (denormalized for quick access)
+    stats: {
+      totalPlayTime: {
+        type: Number,
+        default: 0, // in seconds
       },
-    ],
-
+      gamesPlayed: {
+        type: Number,
+        default: 0,
+      },
+      highestScore: {
+        type: Number,
+        default: 0,
+      },
+      lastActive: {
+        type: Date,
+        default: Date.now,
+      },
+    },
     createdAt: {
       type: Date,
       default: Date.now,
-      immutable: true, //to prevent from being updated
+      immutable: true,
     },
   },
-  {
-    timestamps: false,
-  }
 );
+
+// indexes for common queries
+userSchema.index({ "stats.lastActive": -1 }); // For finding recently active users
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
