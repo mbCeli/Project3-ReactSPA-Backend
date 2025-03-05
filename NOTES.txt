@@ -52,3 +52,33 @@ Current models relationships
 
 - User to Leaderboard: Many-to-many relationship through leaderboard entries.
     - Users appear on leaderboards when they achieve high scores
+
+USERS DE PRUEBA
+- Postman signup
+{
+  "email": "samuel@example.com",
+  "password": "Strong1!Password",
+  "fullName": "Samuel",
+  "username": "Samu",
+  "ageRange": "25-34"
+}
+
+- Postman login
+{
+  "email": "samuel@example.com",
+  "password": "Strong1!Password",
+
+   "email": "celina@email.com",
+  "password": "Cmb1.",
+}
+
+- Postman create user
+{
+  "fullName": "Celina",
+  "username": "Celi",
+  "email": "celina@email.com",
+  "password": "Cmb1.", 
+  "role": "admin",
+  "ageRange": "25-34",
+  "favourites": []
+}

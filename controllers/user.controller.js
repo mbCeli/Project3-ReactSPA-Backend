@@ -31,8 +31,6 @@ const getOneUser = (req, res) => {
 };
 
 //POST new user
-
-//POST new user
 const createNewUser = async (req, res) => {
   try {
     // Check if password is provided

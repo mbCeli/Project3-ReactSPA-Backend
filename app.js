@@ -7,10 +7,10 @@ require("dotenv").config();
 require("./db/index");
 // import the models so the connect to the database
 require("./models/User.model");
-require("./models/Game.model");
 require("./models/PlayAnalytics.model");
 require("./models/Rating.model");
 require("./models/Leaderboard.model");
+require("./models/Game.model");
 
 
 // Handles http requests (express is node js framework)
@@ -28,6 +28,9 @@ app.use("/api", indexRoutes);
 
 const userRoutes = require("./routes/user.routes");
 app.use("/api/users", userRoutes);
+
+const gameRoutes = require("./routes/game.routes");
+app.use("/api/games", gameRoutes);
 
 //AUTHORIZATION routes
 const authRoutes = require("./routes/auth.routes");
