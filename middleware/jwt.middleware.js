@@ -1,5 +1,4 @@
 const { expressjwt: jwt } = require("express-jwt");
-const User = require("../models/User.model");
 
 // Instantiate the JWT token validation middleware
 const isAuthenticated = jwt({
@@ -24,7 +23,7 @@ function getTokenFromHeaders(req) {
   return null;
 }
 
-// to check if the user authenticated is admin
+// to check if the user authenticated is an admin
 const isAdmin = (req, res, next) => {
   if(!req.payload.isAdmin) {
     return res.status(403).json({ message: "Admin access required" });
@@ -34,12 +33,12 @@ const isAdmin = (req, res, next) => {
 
 // to check if the user authenticated is admin or the account user
 const isUserOrAdmin = (req, res, next) => {
-  // this will allow the access to the admi
+  // this will allow the access to the admin
   if (req.payload.isAdmin) {
     return next();
   }
 
-  // This will allow access if the user is accessing their own data
+  // this will allow access if the user is accessing their own data
   const requestedUserId = req.params.userId;
 
   if (req.payload._id === requestedUserId) { // if the request is coming from the same user then next
