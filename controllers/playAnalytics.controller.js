@@ -1,3 +1,5 @@
+//For the analytics async/await functions are better because they wait for the user's play session before updating their stats
+
 const PlayAnalytics = require("../models/PlayAnalytics.model");
 const Game = require("../models/Game.model");
 const User = require("../models/User.model");
@@ -6,25 +8,24 @@ const User = require("../models/User.model");
 const recordPlaySession = async (req, res) => {
   try {
     const { gameId } = req.params;
-    const userId = req.payload._id; // From JWT token
+    const userId = req.payload._id; // get the user ID from JWT payload (to confirm the user is logged in)
 
     const {
       score = 0,
       playDuration = 0,
       completed = false,
-      deviceType = "desktop",
       level = 1,
       levelCompleted = false,
       achievementsEarned = [],
-    } = req.body;
+    } = req.body; // this is the data sent from the user playing the game
 
-    // Validate game exists
+    // check that the game exists
     const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
     }
 
-    // Create play analytics record
+    // Create a new play analytics record based on the user's session and the especific game played
     const playSession = await PlayAnalytics.create({
       user: userId,
       game: gameId,
@@ -38,24 +39,25 @@ const recordPlaySession = async (req, res) => {
       achievementsEarned,
     });
 
-    // Update game play count
-    await Game.findByIdAndUpdate(gameId, {
-      $inc: { totalPlays: 1 },
+    // Update game play count in MongoDB
+    await Game.findByIdAndUpdate(gameId, { // I think this await is to wait for the game to be played and then update the play count
+      $inc: { totalPlays: 1 }, //$inc is a MongoDB operator that increases a numeric field value
     });
 
-    // Update user stats
+    // Update user stats in MongoDB
     await User.findByIdAndUpdate(userId, {
       $inc: {
         "stats.totalPlayTime": playDuration,
         "stats.gamesPlayed": 1,
       },
-      $max: { "stats.highestScore": score },
-      $set: { "stats.lastActive": new Date() },
+      $max: { "stats.highestScore": score }, //$max only updates if the new value is greater
+      $set: { "stats.lastActive": new Date() }, // $set only updates if the new value is different 
     });
 
     console.log(
       `Play session recorded for game ${game.title} by user ${userId}`
     );
+
     res.status(201).json(playSession);
   } catch (err) {
     console.error("Error recording play session:", err);
@@ -71,24 +73,28 @@ const getUserPlayHistory = async (req, res) => {
   try {
     const userId = req.params.userId || req.payload._id;
 
-    // Check if requesting user is allowed to access this data
+    // Check if requesting user is allowed to access this data 
+    // If someone is requesting a specific user's data AND it's not their own data AND they're not an admin, then deny access.
     if (
-      req.params.userId &&
-      req.params.userId !== req.payload._id &&
-      !req.payload.isAdmin
+      req.params.userId && // checks if the request is coming from a different user (not tthe owner of the play history)
+      req.params.userId !== req.payload._id && //checks if the request is coming from a userId that is different from the authenticated user
+      !req.payload.isAdmin // checks if the authenticated user is NOT an admin
     ) {
       return res.status(403).json({
         message: "Not authorized to access another user's play history",
       });
     }
 
-    const playHistory = await PlayAnalytics.find({
+    // to retrieve the play history that matches the userId and the userAction
+    const playHistory = await 
+    PlayAnalytics
+    .find({
       user: userId,
       userAction: "play",
     })
-      .sort({ playDate: -1 })
-      .populate("game", "title thumbnail category difficulty");
-
+    .sort({ playDate: -1 }) // sorts by playDate in descending order
+    .populate("game", "title thumbnail category difficulty"); // populates the game field with the title, thumbnail, category, and difficulty
+ 
     res.status(200).json(playHistory);
   } catch (err) {
     console.error("Error retrieving play history:", err);
@@ -104,28 +110,29 @@ const getGameAnalytics = async (req, res) => {
   try {
     const { gameId } = req.params;
 
-    // Check if game exists
     const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
     }
 
     // Get total plays
-    const totalPlays = await PlayAnalytics.countDocuments({
+    const totalPlays = await 
+    PlayAnalytics
+    .countDocuments({ // countDocuments is a MongoDB method that counts the number of documents that match a query
       game: gameId,
       userAction: "play",
     });
 
     // Get average play duration
     const durationStats = await PlayAnalytics.aggregate([
-      { $match: { game: mongoose.Types.ObjectId(gameId), userAction: "play" } },
+      { $match: { game: mongoose.Types.ObjectId(gameId), userAction: "play" } }, // $match selects only records for this game with "play" action
       {
         $group: {
           _id: null,
           avgDuration: { $avg: "$playDuration" },
           maxDuration: { $max: "$playDuration" },
           totalDuration: { $sum: "$playDuration" },
-        },
+        }, //$group with _id: null groups all matching documents together
       },
     ]);
 
@@ -135,24 +142,12 @@ const getGameAnalytics = async (req, res) => {
       {
         $group: {
           _id: null,
-          totalSessions: { $sum: 1 },
+          totalSessions: { $sum: 1 }, 
           completedSessions: {
-            $sum: { $cond: [{ $eq: ["$completed", true] }, 1, 0] },
+            $sum: { $cond: [{ $eq: ["$completed", true] }, 1, 0] }, // $cond is a MongoDB operator that counts only sessions where completed is true
           },
         },
       },
-    ]);
-
-    // Get device type distribution
-    const deviceStats = await PlayAnalytics.aggregate([
-      { $match: { game: mongoose.Types.ObjectId(gameId), userAction: "play" } },
-      {
-        $group: {
-          _id: "$deviceType",
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { count: -1 } },
     ]);
 
     // Format the results

@@ -33,7 +33,6 @@ const analyticsSchema = new Schema(
     deviceType: {
       type: String,
       enum: ["desktop", "tablet", "mobile"],
-      required: true,
     },
     userAction: {
       type: String,

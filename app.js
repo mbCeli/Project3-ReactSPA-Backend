@@ -32,6 +32,12 @@ app.use("/api/users", userRoutes);
 const gameRoutes = require("./routes/game.routes");
 app.use("/api/games", gameRoutes);
 
+const playAnalyticsRoutes = require("./routes/playAnalytics.routes");
+app.use("/api/analytics", playAnalyticsRoutes);
+
+const ratingRoutes = require("./routes/rating.routes");
+app.use("/", ratingRoutes); //we use this "/" because the routes already start with "/api"
+
 //AUTHORIZATION routes
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
