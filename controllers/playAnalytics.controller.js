@@ -3,6 +3,7 @@
 const PlayAnalytics = require("../models/PlayAnalytics.model");
 const Game = require("../models/Game.model");
 const User = require("../models/User.model");
+const mongoose = require("mongoose");
 
 // Record a new play session
 const recordPlaySession = async (req, res) => {
@@ -15,6 +16,7 @@ const recordPlaySession = async (req, res) => {
       playDuration = 0,
       completed = false,
       level = 1,
+      deviceType = "desktop",
       levelCompleted = false,
       achievementsEarned = [],
     } = req.body; // this is the data sent from the user playing the game
@@ -125,7 +127,7 @@ const getGameAnalytics = async (req, res) => {
 
     // Get average play duration
     const durationStats = await PlayAnalytics.aggregate([
-      { $match: { game: mongoose.Types.ObjectId(gameId), userAction: "play" } }, // $match selects only records for this game with "play" action
+      { $match: { game: new mongoose.Types.ObjectId(gameId), userAction: "play" } }, // $match selects only records for this game with "play" action
       {
         $group: {
           _id: null,
@@ -138,7 +140,7 @@ const getGameAnalytics = async (req, res) => {
 
     // Get completion rate
     const completionStats = await PlayAnalytics.aggregate([
-      { $match: { game: mongoose.Types.ObjectId(gameId), userAction: "play" } },
+      { $match: { game: new mongoose.Types.ObjectId(gameId), userAction: "play" } },
       {
         $group: {
           _id: null,
@@ -173,11 +175,6 @@ const getGameAnalytics = async (req, res) => {
                 100
             )
           : 0,
-      deviceTypes: deviceStats.map((item) => ({
-        type: item._id,
-        count: item.count,
-        percentage: Math.round((item.count / totalPlays) * 100),
-      })),
     };
 
     res.status(200).json(analytics);

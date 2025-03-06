@@ -10,10 +10,7 @@ const createOrUpdateRating = async (req, res) => {
     const userId = req.payload._id;
     const { score, review } = req.body; // I only want the score and the review
 
-    // Ensure gameId is a valid ObjectId
-    const gameObjectId = mongoose.Types.ObjectId(gameId);
-
-    const game = await Game.findById(gameObjectId);
+    const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
     }
@@ -24,7 +21,7 @@ const createOrUpdateRating = async (req, res) => {
     }
 
     // Check if user has already rated this game
-    const existingRating = await Rating.findOne({ user: userId, game: gameObjectId });
+    const existingRating = await Rating.findOne({ user: userId, game: gameId });
 
     let rating;
     let operation;
@@ -41,7 +38,7 @@ const createOrUpdateRating = async (req, res) => {
       // Create new rating
       rating = await Rating.create({
         user: userId,
-        game: gameObjectId,
+        game: gameId,
         score,
         review,
       });
@@ -49,7 +46,7 @@ const createOrUpdateRating = async (req, res) => {
     }
 
     // Update game's average rating (function created below)
-    await updateGameAverageRating(gameObjestId);
+    await updateGameAverageRating(gameId);
 
     console.log(`Rating ${operation} for game ${game.title} by user ${userId}`);
     res.status(operation === "created" ? 201 : 200).json(rating);
@@ -201,7 +198,7 @@ const getGameRatingStats = async (req, res) => {
 
     // Get rating distribution
     const ratingDistribution = await Rating.aggregate([
-      { $match: { game: mongoose.Types.ObjectId(gameId) } },
+      { $match: { game: new mongoose.Types.ObjectId(gameId) } },
       {
         $group: {
           _id: "$score",
@@ -250,7 +247,7 @@ const updateGameAverageRating = async (gameId) => {
   try {
     // Calculate new average rating
     const ratingStats = await Rating.aggregate([
-      { $match: { game: mongoose.Types.ObjectId(gameId) } }, // to coincide with the game id
+      { $match: { game: new mongoose.Types.ObjectId(gameId) } }, // to coincide with the game id
       {
         $group: {
           _id: null,
