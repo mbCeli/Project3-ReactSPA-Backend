@@ -17,6 +17,10 @@ const gameSchema = new Schema(
       type: String,
       required: true,
     },
+    creatorGithub: {
+      type: String,
+      trim: true,
+    },
     gameUrl: {
       type: String,
       required: true,
