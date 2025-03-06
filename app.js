@@ -35,6 +35,9 @@ app.use("/api/games", gameRoutes);
 const playAnalyticsRoutes = require("./routes/playAnalytics.routes");
 app.use("/analytics", playAnalyticsRoutes);
 
+const leaderboardRoutes = require("./routes/leaderboard.routes");
+app.use("/leaderboard", leaderboardRoutes);
+
 const ratingRoutes = require("./routes/rating.routes");
 app.use("/", ratingRoutes); //we use this "/" because if we use /api/ratings the requests will fail 
 // because the beginning of the path is different for each endpoint

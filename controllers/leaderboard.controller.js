@@ -4,7 +4,7 @@ const User = require("../models/User.model");
 const mongoose = require("mongoose");
 
 // Submit a new score to the leaderboard
-const submitScore = async (req, res) => {
+const postScore = async (req, res) => {
   try {
     const { gameId } = req.params;
     const userId = req.payload._id;
@@ -30,7 +30,7 @@ const submitScore = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Find or create the leaderboard for this game and timeframe
+    // if there is no leaderboard, create one
     let leaderboard = await Leaderboard.findOne({ game: gameId, timeframe });
 
     if (!leaderboard) {
@@ -46,9 +46,9 @@ const submitScore = async (req, res) => {
       (entry) => entry.user.toString() === userId
     );
 
-    // Update or create entry
+    // if there is no user leaderboard entry, add one, if there is, update it
     if (existingEntryIndex !== -1) {
-      // Only update if new score is higher
+      //update if new score is higher
       if (score > leaderboard.entries[existingEntryIndex].score) {
         leaderboard.entries[existingEntryIndex].score = score;
         leaderboard.entries[existingEntryIndex].achievedAt = new Date();
@@ -59,7 +59,7 @@ const submitScore = async (req, res) => {
         });
       }
     } else {
-      // Add new entry
+      // add new
       leaderboard.entries.push({
         user: userId,
         username: user.username,
@@ -98,13 +98,12 @@ const submitScore = async (req, res) => {
   }
 };
 
-// Get leaderboard for a game
+// GET leaderboard for a game
 const getLeaderboard = async (req, res) => {
   try {
     const { gameId } = req.params;
     const { timeframe = "allTime", limit = 10 } = req.query;
 
-    // Validate game exists
     const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ message: "Game not found" });
@@ -118,6 +117,8 @@ const getLeaderboard = async (req, res) => {
         game: {
           id: game._id,
           title: game.title,
+          thumbnail: game.thumbnail,
+          category: game.category,
         },
         timeframe,
         entries: [],
@@ -143,10 +144,7 @@ const getLeaderboard = async (req, res) => {
 
     // Format response
     const result = {
-      game: {
-        id: game._id,
-        title: game.title,
-      },
+      game: leaderboard.game,
       timeframe,
       lastUpdated: leaderboard.lastUpdated,
       entries: leaderboard.entries.slice(0, parseInt(limit)),
@@ -164,7 +162,7 @@ const getLeaderboard = async (req, res) => {
   }
 };
 
-// Get user's rank across all leaderboards
+// GET user's rank across all leaderboards
 const getUserRanks = async (req, res) => {
   try {
     const userId = req.params.userId || req.payload._id;
@@ -207,7 +205,7 @@ const getUserRanks = async (req, res) => {
 
     // Sort by rank (best rankings first)
     userRanks.sort((a, b) => {
-      // Calculate percentile rank (lower is better)
+      // Calculate percentile rank (lower is better) - no idea what this does
       const rankPercentileA = a.rank / a.totalPlayers;
       const rankPercentileB = b.rank / b.totalPlayers;
       return rankPercentileA - rankPercentileB;
@@ -223,7 +221,7 @@ const getUserRanks = async (req, res) => {
   }
 };
 
-// Reset a leaderboard (admin only)
+// Reset a leaderboard
 const resetLeaderboard = async (req, res) => {
   try {
     const { gameId } = req.params;
@@ -259,7 +257,7 @@ const resetLeaderboard = async (req, res) => {
   }
 };
 
-// Get global rankings across all games (top players)
+// GET global rankings across all games (top players)
 const getGlobalRankings = async (req, res) => {
   try {
     const { limit = 10 } = req.query;
@@ -285,15 +283,6 @@ const getGlobalRankings = async (req, res) => {
 
       // Limit results
       { $limit: parseInt(limit) },
-
-      // Add rank field
-      {
-        $addFields: {
-          rank: {
-            $add: [{ $indexOfArray: ["$totalScore", "$totalScore"] }, 1],
-          },
-        },
-      },
 
       // Project final fields
       {
@@ -331,13 +320,12 @@ const getGlobalRankings = async (req, res) => {
   }
 };
 
-// Remove a user from leaderboard (admin only)
-const removeUserFromLeaderboard = async (req, res) => {
+// Delete a user from leaderboard
+const deleteUserFromLeaderboard = async (req, res) => {
   try {
     const { gameId, userId } = req.params;
     const { timeframe = "allTime" } = req.query;
 
-    // Check if user is admin
     if (!req.payload.isAdmin) {
       return res.status(403).json({ message: "Admin access required" });
     }
@@ -380,10 +368,10 @@ const removeUserFromLeaderboard = async (req, res) => {
 };
 
 module.exports = {
-  submitScore,
+  postScore,
   getLeaderboard,
   getUserRanks,
   resetLeaderboard,
   getGlobalRankings,
-  removeUserFromLeaderboard,
+  deleteUserFromLeaderboard,
 };
