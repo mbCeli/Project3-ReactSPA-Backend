@@ -22,27 +22,9 @@ const app = express();
 require("./config")(app);
 
 // 👇 Start handling routes here (this are the important routes)
-//API routes
 const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
-const userRoutes = require("./routes/user.routes");
-app.use("/api/users", userRoutes);
-
-const gameRoutes = require("./routes/game.routes");
-app.use("/api/games", gameRoutes);
-
-const playAnalyticsRoutes = require("./routes/playAnalytics.routes");
-app.use("/analytics", playAnalyticsRoutes);
-
-const leaderboardRoutes = require("./routes/leaderboard.routes");
-app.use("/leaderboard", leaderboardRoutes);
-
-const ratingRoutes = require("./routes/rating.routes");
-app.use("/", ratingRoutes); //we use this "/" because if we use /api/ratings the requests will fail 
-// because the beginning of the path is different for each endpoint
-
-//AUTHORIZATION routes
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 

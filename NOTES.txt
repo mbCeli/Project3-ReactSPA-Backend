@@ -92,7 +92,7 @@ USERS DE PRUEBA
     - Sasha: https://sashaknw.github.io/game-try1/
     - Aythami: https://aythp.github.io/simon-says/
     - Omar: https://kyomar97.github.io/Project-videogame-arka/
-    - Nestor: 
+    - Nestor: https://nestorsdelgado.github.io/minigame1/
     - Gara: https://garaluzardo.github.io/backup-proyecto-juego-js/
     - Kilian: https://github.com/Kilianhc/project-1-The-Game
     - Julia: https://github.com/zuma-code/memory1

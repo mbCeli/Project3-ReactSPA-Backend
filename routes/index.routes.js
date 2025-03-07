@@ -13,9 +13,8 @@ router.use("/users", userRoutes);
 router.use("/games", gameRoutes);
 router.use("/analytics", playAnalyticsRoutes);
 router.use("/leaderboard", leaderboardRoutes);
-router.use("/", ratingRoutes); //we use this "/" because the routes in the rating.routes.js 
-// are defined with paths that already start with specific resources,
-// RESTful URLs that follow the convention of organizing routes by resource
+router.use("/", ratingRoutes); //we use this "/" because if we use /api/ratings 
+// the requests will fail because the beginning of the path is different for each endpoint
 
 
 module.exports = router;
