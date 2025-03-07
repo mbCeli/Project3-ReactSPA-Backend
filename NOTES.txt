@@ -65,10 +65,7 @@ USERS DE PRUEBA
 
 - Postman login
 {
-  "email": "samuel@example.com",
-  "password": "Strong1!Password",
-
-   "email": "celina@email.com",
+  "email": "celina@email.com",
   "password": "Cmb1.",
 }
 
@@ -82,3 +79,25 @@ USERS DE PRUEBA
   "ageRange": "25-34",
   "favourites": []
 }
+
+- Classroom
+    - Samuel: https://samuglez.github.io/project-game/
+    - Fernando: https://fernando-pucha.github.io/3S3-game/
+    - Celina: https://mbceli.github.io/Projetc1-TheGame/
+    - Kevin: https://kevinjg994.github.io/Whack-a-Diglett/
+    - Kelvin: https://kelvinf87.github.io/gamekpum/
+    - Fenyx: https://fenyyx.github.io/Memojojory/
+    - Patricia: https://patricia-graciagutierrez.github.io/project_game/
+    - Roberto: https://robertfm89.github.io/NOT-another-brick-in-the-wall/
+    - Sasha: https://sashaknw.github.io/game-try1/
+    - Aythami: https://aythp.github.io/simon-says/
+    - Omar: https://kyomar97.github.io/Project-videogame-arka/
+    - Nestor: 
+    - Gara: https://garaluzardo.github.io/backup-proyecto-juego-js/
+    - Kilian: https://github.com/Kilianhc/project-1-The-Game
+    - Julia: https://github.com/zuma-code/memory1
+    - Monica: https://monica-r.github.io/fillit
+    - Airam: https://airam-plasencia.github.io/Ballerina-game/
+    - Johana: https://jojocg.github.io/Sen-Beauty-Salon-Game/
+
+- Saving scores for the rankings
