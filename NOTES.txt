@@ -100,11 +100,3 @@ USERS DE PRUEBA
     - Airam: https://airam-plasencia.github.io/Ballerina-game/
     - Johana: https://jojocg.github.io/Sen-Beauty-Salon-Game/
 
-- Saving scores for the rankings
-
-aceitunas negras
-extra de queso
-doble de bacon
-cebolla caramelizada
-
-chicken dallas

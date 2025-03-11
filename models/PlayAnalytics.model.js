@@ -38,7 +38,7 @@ const analyticsSchema = new Schema(
     },
     userAction: {
       type: String,
-      enum: ["play", "favorite", "unfavorite", "view"],
+      enum: ["play", "favourite", "unfavourite", "view"],
       required: true,
     },
     // New fields for tracking achievements and levels

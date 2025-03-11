@@ -80,7 +80,7 @@ const gameSchema = new Schema(
       },
     ],
     // New field for counting favorites
-    favoriteCount: {
+    favouriteCount: {
       type: Number,
       default: 0,
     },

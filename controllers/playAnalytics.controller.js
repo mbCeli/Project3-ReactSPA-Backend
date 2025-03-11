@@ -195,7 +195,7 @@ const recordUserAction = async (req, res) => {
     const { userAction, deviceType = "desktop" } = req.body;
 
     // Validate action type
-    if (!["favorite", "unfavorite", "view"].includes(userAction)) {
+    if (!["favourite", "unfavourite", "view"].includes(userAction)) {
       return res.status(400).json({ message: "Invalid action type" });
     }
 
@@ -215,13 +215,13 @@ const recordUserAction = async (req, res) => {
     });
 
     // Update favorite count if applicable
-    if (userAction === "favorite") {
-      await Game.findByIdAndUpdate(gameId, { $inc: { favoriteCount: 1 } });
+    if (userAction === "favourite") {
+      await Game.findByIdAndUpdate(gameId, { $inc: { favouriteCount: 1 } });
       await User.findByIdAndUpdate(userId, {
         $addToSet: { favourites: gameId },
       });
     } else if (userAction === "unfavorite") {
-      await Game.findByIdAndUpdate(gameId, { $inc: { favoriteCount: -1 } });
+      await Game.findByIdAndUpdate(gameId, { $inc: { favouriteCount: -1 } });
       await User.findByIdAndUpdate(userId, { $pull: { favourites: gameId } });
     }
 
