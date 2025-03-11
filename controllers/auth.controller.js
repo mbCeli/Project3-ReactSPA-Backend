@@ -45,10 +45,10 @@ const signup = (req, res, next) => {
       // and not if it returns a response (res.status().json())
 
       // Deconstruct the newly created user object to omit the password
-      const { email, name, _id } = createdUser;
+      const { email, fullName, _id } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id };
+      const user = { email, fullName, _id };
 
       console.log("Created new user ->", user);
       res.status(201).json(user); // Return the user without password
