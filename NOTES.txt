@@ -42,7 +42,7 @@ Current models relationships
 
 
 - User to Rating: One-to-many relationship where users can rate multiple games.
-    - New Rating model allows users to provide scores and reviews for games
+    - New Rating model allows users to provide scores and commentss for games
 
 - Game to Rating: One-to-many relationship where games receive multiple ratings.
     - Aggregate rating data is stored in the Game model for quick access
@@ -87,16 +87,16 @@ USERS DE PRUEBA
     - Kevin: https://kevinjg994.github.io/Whack-a-Diglett/ - Done
     - Kelvin: https://kelvinf87.github.io/gamekpum/ - Done
     - Fenyx: https://fenyyx.github.io/Memojojory/
-    - Patricia: https://patricia-graciagutierrez.github.io/project_game/ 
-    - Roberto: https://robertfm89.github.io/NOT-another-brick-in-the-wall/
-    - Sasha: https://sashaknw.github.io/game-try1/
-    - Aythami: https://aythp.github.io/simon-says/
-    - Omar: https://kyomar97.github.io/Project-videogame-arka/
-    - Nestor: https://nestorsdelgado.github.io/minigame1/
-    - Gara: https://garaluzardo.github.io/backup-proyecto-juego-js/
+    - Patricia: https://patricia-graciagutierrez.github.io/project_game/ - Done
+    - Roberto: https://robertfm89.github.io/NOT-another-brick-in-the-wall/ - Done
+    - Sasha: https://sashaknw.github.io/game-try1/ - Done
+    - Aythami: https://aythp.github.io/simon-says/ - Done
+    - Omar: https://kyomar97.github.io/Project-videogame-arka/ - Done
+    - Nestor: https://nestorsdelgado.github.io/minigame1/ - Done
+    - Gara: https://garaluzardo.github.io/backup-proyecto-juego-js/ - Done
     - Kilian: https://github.com/Kilianhc/project-1-The-Game
     - Julia: https://github.com/zuma-code/memory1
     - Monica: https://monica-r.github.io/fillit
-    - Airam: https://airam-plasencia.github.io/Ballerina-game/
-    - Johana: https://jojocg.github.io/Sen-Beauty-Salon-Game/
+    - Airam: https://airam-plasencia.github.io/Ballerina-game/ - Done
+    - Johana: https://jojocg.github.io/Sen-Beauty-Salon-Game/ - Done
 

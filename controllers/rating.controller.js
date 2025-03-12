@@ -8,7 +8,7 @@ const createOrUpdateRating = async (req, res) => {
   try {
     const { gameId } = req.params;
     const userId = req.payload._id;
-    const { score, review } = req.body; // I only want the score and the review
+    const { score, comments } = req.body; // I only want the score and the comments
 
     const game = await Game.findById(gameId);
     if (!game) {
@@ -30,7 +30,7 @@ const createOrUpdateRating = async (req, res) => {
       // Update existing rating
       rating = await Rating.findByIdAndUpdate(
         existingRating._id,
-        { score, review },
+        { score, comments },
         { new: true }
       );
       operation = "updated";
@@ -40,7 +40,7 @@ const createOrUpdateRating = async (req, res) => {
         user: userId,
         game: gameId,
         score,
-        review,
+        comments,
       });
       operation = "created";
     }
@@ -154,7 +154,6 @@ const deleteRating = async (req, res) => {
     const { ratingId } = req.params;
     const userId = req.payload._id;
 
-    // Find the rating
     const rating = await Rating.findById(ratingId);
 
     if (!rating) {
