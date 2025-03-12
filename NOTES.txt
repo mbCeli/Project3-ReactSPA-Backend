@@ -81,13 +81,13 @@ USERS DE PRUEBA
 }
 
 - Classroom
-    - Samuel: https://samuglez.github.io/project-game/
-    - Fernando: https://fernando-pucha.github.io/3S3-game/
-    - Celina: https://mbceli.github.io/Projetc1-TheGame/
-    - Kevin: https://kevinjg994.github.io/Whack-a-Diglett/
-    - Kelvin: https://kelvinf87.github.io/gamekpum/
+    - Samuel: https://samuglez.github.io/project-game/ - Done
+    - Fernando: https://fernando-pucha.github.io/3S3-game/ - Done
+    - Celina: https://mbceli.github.io/Projetc1-TheGame/ - Done
+    - Kevin: https://kevinjg994.github.io/Whack-a-Diglett/ - Done
+    - Kelvin: https://kelvinf87.github.io/gamekpum/ - Done
     - Fenyx: https://fenyyx.github.io/Memojojory/
-    - Patricia: https://patricia-graciagutierrez.github.io/project_game/
+    - Patricia: https://patricia-graciagutierrez.github.io/project_game/ 
     - Roberto: https://robertfm89.github.io/NOT-another-brick-in-the-wall/
     - Sasha: https://sashaknw.github.io/game-try1/
     - Aythami: https://aythp.github.io/simon-says/
