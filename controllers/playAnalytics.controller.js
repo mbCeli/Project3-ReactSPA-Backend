@@ -187,7 +187,7 @@ const getGameAnalytics = async (req, res) => {
   }
 };
 
-// Record user actions (favorite, unfavorite, view)
+// Record user actions (favorite, urite, view)
 const recordUserAction = async (req, res) => {
   try {
     const { gameId } = req.params;
@@ -370,8 +370,8 @@ const getPlatformAnalytics = async (req, res) => {
           favorites: {
             $sum: { $cond: [{ $eq: ["$userAction", "favorite"] }, 1, 0] },
           },
-          unfavorites: {
-            $sum: { $cond: [{ $eq: ["$userAction", "unfavorite"] }, 1, 0] },
+          unfavourites: {
+            $sum: { $cond: [{ $eq: ["$userAction", "unfavourite"] }, 1, 0] },
           },
           views: {
             $sum: { $cond: [{ $eq: ["$userAction", "view"] }, 1, 0] },

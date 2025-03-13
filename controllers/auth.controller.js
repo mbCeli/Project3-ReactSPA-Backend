@@ -129,12 +129,23 @@ const logout = (req, res) => {
 
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
-const verify = (req, res) => {
-  // The isAuthenticated middleware already verified the token
-  // We just need to send back the user data from the token
-  /* const { _id, email, name, isAdmin } = req.payload; */
+const verify = async (req, res) => {
+  try {
+    const userId = req.payload._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  res.status(200).json(/* { _id, email, name, isAdmin } */ req.payload);
+    // Send complete user data including favourites
+    res.status(200).json({
+      ...req.payload,
+      favourites: user.favourites,
+    });
+  } catch (err) {
+    console.error("Error in verify:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 module.exports = {
