@@ -49,12 +49,9 @@ const signup = (req, res, next) => {
 
       // Create a new object that doesn't expose the password
       const user = { email, fullName, _id };
-
-      console.log("Created new user ->", user);
       res.status(201).json(user); // Return the user without password
     })
     .catch((err) => {
-      console.log("Error creating user:", err);
       res.status(500).json({ error: "Failed to create new user: " + err });
     });
 };
@@ -63,7 +60,6 @@ const signup = (req, res, next) => {
 const login = (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log("Login attempt for:", email);
 
     // check if email and password are provided
     if (email === "" || password === "") {
@@ -73,36 +69,28 @@ const login = (req, res, next) => {
     // check if user exists
     User.findOne({ email })
       .then((foundUser) => {
-        console.log("User found:", foundUser ? "Yes" : "No");
-
         if (!foundUser) {
           // If user is not found, send error response
           return res.status(401).json({ message: "User not found" });
         }
-
-        console.log("Comparing passwords...");
         // Compare the provided password with the one saved in the database
         const passwordCorrect = bcrypt.compareSync(
           password,
           foundUser.password
         );
-        console.log("Password correct:", passwordCorrect ? "Yes" : "No");
 
         if (passwordCorrect) {
           // Create an object that will be set as the token payload
-          console.log("Creating token...");
           const { _id, email, fullName, username, role } = foundUser;
           const isAdmin = role === "admin";
 
           const payload = { _id, email, fullName, username, isAdmin };
-          console.log("Payload created:", payload);
 
           // Create a JSON Web Token and sign it
           const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
             algorithm: "HS256",
             expiresIn: "6h",
           });
-          console.log("Token created successfully");
 
           // Send the token as the response
           res.status(200).json({ authToken });
@@ -111,11 +99,9 @@ const login = (req, res, next) => {
         }
       })
       .catch((err) => {
-        console.log("Error in database query:", err);
         res.status(500).json({ message: "Internal Server Error" });
       });
   } catch (error) {
-    console.log("Unexpected error in login function:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

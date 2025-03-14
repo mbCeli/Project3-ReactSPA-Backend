@@ -56,10 +56,6 @@ const recordPlaySession = async (req, res) => {
       $set: { "stats.lastActive": new Date() }, // $set only updates if the new value is different 
     });
 
-    console.log(
-      `Play session recorded for game ${game.title} by user ${userId}`
-    );
-
     res.status(201).json(playSession);
   } catch (err) {
     console.error("Error recording play session:", err);
@@ -230,9 +226,6 @@ const recordUserAction = async (req, res) => {
       $set: { "stats.lastActive": new Date() },
     });
 
-    console.log(
-      `User ${userId} performed action ${userAction} on game ${game.title}`
-    );
     res.status(201).json(actionRecord);
   } catch (err) {
     console.error("Error recording user action:", err);

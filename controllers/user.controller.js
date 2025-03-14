@@ -6,11 +6,9 @@ const saltRounds = 10;
 const getAllUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      console.log("All users retrieved ->", users);
       res.status(200).json(users);
     })
     .catch((err) => {
-      console.log(err, "Error to show users");
       res.status(500).json({ error: "Failed to retrieve users" + err });
     });
 };
@@ -21,11 +19,9 @@ const getOneUser = (req, res) => {
 
   User.findById(userId)
     .then((user) => {
-      console.log("User retrieved ->", user);
       res.status(200).json(user);
     })
     .catch((err) => {
-      console.log(err, "Error to show user");
       res.status(500).json({ error: "Failed to retrieve user" + err });
     });
 };
@@ -49,7 +45,6 @@ const createNewUser = async (req, res) => {
     };
     
     const createdUser = await User.create(userData);
-    console.log("Created new user ->", createdUser);
     res.status(201).json(createdUser);
   } catch (err) {
     console.error("Error creating user:", err);
@@ -113,7 +108,6 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("Updated user ->", updatedUser);
     res.status(200).json(updatedUser);
   } catch (err) {
     console.error("Error updating user:", err);
@@ -149,11 +143,9 @@ const deleteUser = (req, res) => {
       if (!deleteUser) {
         return res.status(404).json({ message: "User not found" });
       }
-      console.log("User deleted");
       res.status(204).send();
     })
     .catch((err) => {
-      console.log(err, "Error while deleting user ->", err);
       res.status(500).json({ error: "Failed to delete user" });
     });
 };

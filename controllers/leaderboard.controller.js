@@ -84,10 +84,6 @@ const postScore = async (req, res) => {
         "stats.lastActive": new Date(),
       });
     }
-
-    console.log(
-      `Score ${score} submitted for game ${game.title} by user ${user.username}`
-    );
     res.status(201).json(leaderboard);
   } catch (err) {
     console.error("Error submitting score:", err);
@@ -246,7 +242,6 @@ const resetLeaderboard = async (req, res) => {
       return res.status(404).json({ message: "Leaderboard not found" });
     }
 
-    console.log(`Leaderboard reset for game ${gameId}, timeframe ${timeframe}`);
     res.status(200).json({ message: "Leaderboard reset successfully" });
   } catch (err) {
     console.error("Error resetting leaderboard:", err);
@@ -353,8 +348,6 @@ const deleteUserFromLeaderboard = async (req, res) => {
 
     // Save changes
     await leaderboard.save();
-
-    console.log(`User ${userId} removed from leaderboard for game ${gameId}`);
     res
       .status(200)
       .json({ message: "User removed from leaderboard successfully" });

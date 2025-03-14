@@ -48,7 +48,6 @@ const createOrUpdateRating = async (req, res) => {
     // Update game's average rating (function created below)
     await updateGameAverageRating(gameId);
 
-    console.log(`Rating ${operation} for game ${game.title} by user ${userId}`);
     res.status(operation === "created" ? 201 : 200).json(rating);
   } catch (err) {
     console.error("Error creating/updating rating:", err);
@@ -173,7 +172,7 @@ const deleteRating = async (req, res) => {
     // Update game's average rating
     await updateGameAverageRating(rating.game);
 
-    console.log(`Rating deleted for game ${rating.game} by user ${userId}`);
+    (`Rating deleted for game ${rating.game} by user ${userId}`);
     res.status(204).send();
   } catch (err) {
     console.error("Error deleting rating:", err);
