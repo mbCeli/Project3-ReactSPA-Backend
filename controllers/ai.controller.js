@@ -3,6 +3,7 @@ const Game = require("../models/Game.model");
 const User = require("../models/User.model");
 const PlayAnalytics = require("../models/PlayAnalytics.model");
 const Rating = require("../models/Rating.model");
+const { validationResult } = require("express-validator");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -42,6 +43,14 @@ const getGameRecommendations = async (userId) => {
 // Chat with the AI
 const chatWithAssistant = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: errors.array(),
+      });
+    }
+
     const { message } = req.body;
     const userId = req.payload._id;
 
@@ -99,7 +108,7 @@ USER QUERY: ${message}`;
     const result = await model.generateContent(systemPrompt);
     const response = result.response.text();
 
-    // Log the interaction (optional)
+    // Log the interaction
     console.log(`User query: ${message}`);
     console.log(`AI response: ${response.substring(0, 100)}...`);
 
